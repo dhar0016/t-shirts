@@ -1,0 +1,64 @@
+
+body{
+    padding: 0px 50px 0px 50px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.container{
+    width: 100%;
+    height: auto;
+
+
+
+}
+
+.product-list{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.product{
+    width: 30%;
+    height: auto;
+    margin: 15px;
+}
+
+.product img{
+    width: 100%;
+    height: auto;
+}
+
+.product p {
+    font-weight: bold;
+}
+
+.product .buy{
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+}
+
+.product .buy select{
+    width: 60%;
+    height: 40px;
+}
+
+.product .buy input {
+    width: 50px;
+    height: 40px;
+    margin-left: 30px;
+    border-radius: 5px;
+    background-color: grey;
+    color: white;
+    border-color: gray;
+}
+
+.product .ofs{
+    color: red;
+    font-weight: 400;
+}

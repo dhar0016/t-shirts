@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>T-Shirts</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7.19.1/babel.min.js"></script>
+
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function Product(prop) {
+        let options = [];
+        for (let i = 1; i <= prop.stock; i++) {
+            options.push(<option key={i} value={i}>{i}</option>);
+        }
+
+        const [selectedOption, setSelectedOption] = React.useState(1);
+
+        function formHandler(e) {
+            e.preventDefault();
+            prop.setStockChanged({ quantity: parseInt(selectedOption), index: prop.index });
+        }
+
+        function handleSelectChange(e) {
+            setSelectedOption(e.target.value);
+        }
+
+        return (
+            <div className="product">
+                <img src={"./images/" + prop.image} alt={prop.title} />
+                <h2>{prop.title}</h2>
+                <p> $ {prop.price}</p>
+                <span>{prop.stock} left!</span>
+                {prop.stock <=0 ? <p className="ofs">Out of stock</p> : <div className="buy">
+                    <form onSubmit={formHandler}>
+                        <select value={selectedOption} onChange={handleSelectChange}>
+                            {options.map(option => option)}
+                        </select>
+                        <input type="submit" value="Buy" data-index={prop.index} />
+                    </form>
+                </div>}
+                
+            </div>
+        );
+    }
+
+    function App() {
+        const initialTshirts = [
+  {
+    title: 'Blue T-Shirt',
+    image: 'blue-t-shirt.jpg',
+    price: 7.99,
+    stock: 4,
+    quantity: 1
+  },
+  {
+    title: 'Bright Purple T-Shirt',
+    image: 'bright-purple-t-shirt.jpg',
+    price: 5.99,
+    stock: 1,
+    quantity: 1
+  },
+  {
+    title: 'Cobalt Blue T-Shirt',
+    image: 'cobalt-blue-t-shirt.jpg',
+    price: 9.99,
+    stock: 5,
+    quantity: 1
+  },
+  {
+    title: 'Green T-Shirt',
+    image: 'green-t-shirt.jpg',
+    price: 6.99,
+    stock: 0,
+    quantity: 1
+  },
+  {
+    title: 'Grey T-Shirt',
+    image: 'blue-t-shirt.jpg',
+    price: 4.99,
+    stock: 2,
+    quantity: 1
+  },
+  {
+    title: 'Light Green T-Shirt',
+    image: 'light-green-t-shirt.jpg',
+    price: 7.99,
+    stock: 4,
+    quantity: 1
+  },
+  {
+    title: 'Purple T-Shirt',
+    image: 'purple-t-shirt.jpg',
+    price: 7.99,
+    stock: 0,
+    quantity: 1
+  },
+  {
+    title: 'Red T-Shirt',
+    image: 'red-t-shirt.jpg',
+    price: 6.99,
+    stock: 3,
+    quantity: 1
+  },
+  {
+    title: 'Teal T-Shirt',
+    image: 'teal-t-shirt.jpg',
+    price: 7.99,
+    stock: 2,
+    quantity: 1
+  }
+];
+
+        const [tshirts, setTshirts] = React.useState(() => {
+            return JSON.parse(localStorage.getItem('tshirts')) || initialTshirts;
+        });
+
+        const [stockChanged, setStockChanged] = React.useState({ quantity: 0, index: -1 });
+
+        React.useEffect(() => {
+            if (stockChanged.index >= 0) {
+                setTshirts(prevTshirts => {
+                    const updatedTshirts = prevTshirts.map((tshirt, index) => {
+                        if (index === stockChanged.index) {
+                            return { ...tshirt, stock: tshirt.stock - stockChanged.quantity };
+                        }
+                        return tshirt;
+                    });
+                    localStorage.setItem('tshirts', JSON.stringify(updatedTshirts));
+                    return updatedTshirts;
+                });
+            }
+        }, [stockChanged]);
+
+        return (
+            <div className="container">
+                <h1>T-Shirts</h1>
+                <div className="product-list">
+                    {tshirts.map((tshirt, index) => (
+                        <Product
+                            key={index}
+                            setStockChanged={setStockChanged}
+                            index={index}
+                            image={tshirt.image}
+                            title={tshirt.title}
+                            price={tshirt.price}
+                            stock={tshirt.stock}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
